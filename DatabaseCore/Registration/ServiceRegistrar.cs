@@ -6,7 +6,7 @@ namespace DatabaseCore.Registration;
 
 public static class ServiceRegistrar
 {
-    public static IServiceCollection AddDatabaseCore(this IServiceCollection services, Assembly assembly)
+    public static IServiceCollection AddDatabaseCore(this IServiceCollection services, params Assembly[] assemblies)
     {
         var databaseInterfaces = new[]
         {
@@ -16,15 +16,24 @@ public static class ServiceRegistrar
             typeof(ISaveCommand<,>)
         };
 
-        var modules = assembly.DefinedTypes
+        var modules = assemblies
+            .SelectMany(assembly => assembly.DefinedTypes)
             .Where(type => type is { IsInterface: false, IsAbstract: false }
                 && type.GetInterfaces().Any(interfaceType =>
                     IsDatabaseInterfaces(interfaceType, databaseInterfaces)));
 
         foreach (var module in modules)
         {
-            var interfaceType = module.GetInterfaces().First(interfaceType =>
+            var interfaceType = module.GetInterfaces().FirstOrDefault(interfaceType =>
+                !IsDatabaseInterfaces(interfaceType, databaseInterfaces));
+
+            if (interfaceType is null)
+            {
+                var wrongType = module.GetInterfaces().FirstOrDefault(interfaceType =>
                 IsDatabaseInterfaces(interfaceType, databaseInterfaces));
+
+                throw new Exception($"Could not find another services type other then {wrongType.Name} with service {module.Name}");
+            }
 
             services.AddScoped(interfaceType, module);
         }

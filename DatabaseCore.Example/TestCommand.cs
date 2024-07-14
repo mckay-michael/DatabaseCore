@@ -2,17 +2,17 @@
 
 namespace DatabaseCore.Example;
 
-public class TestCommand<TResponse, TParameters> : ISaveCommand<TResponse, TParameters>
+public class TestCommand : ISaveCommand<int, int>, ITestCommand
 {
-    public Task<TResponse> Save(TParameters parameters)
+    public Task<int> Save(int parameters, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 }
 
-public class TestCommand<TResponse> : ISaveCommand<TResponse>
+public class TestCommand1 : ISaveCommand<string>
 {
-    Task ISaveCommand<TResponse>.Save(TResponse parameters)
+    public Task Save(string parameters, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

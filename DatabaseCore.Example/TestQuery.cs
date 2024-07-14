@@ -2,17 +2,17 @@
 
 namespace DatabaseCore.Example;
 
-public class TestQuery<TResponse, TParameters> : IGetQuery<TResponse, TParameters>
+public class TestQuery : IGetQuery<string, string>
 {
-    public Task<TResponse> Query(TParameters parameters)
+    public Task<string> Query(string parameters, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 }
 
-public class TestQuery<TResponse> :IGetQuery<TResponse>
+public class TestQuery1 : IGetQuery<string>, ITestQuery1
 {
-    Task<TResponse> IGetQuery<TResponse>.Query()
+    public Task<string> Query(CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

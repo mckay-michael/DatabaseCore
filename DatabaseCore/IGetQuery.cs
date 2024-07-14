@@ -3,10 +3,10 @@ namespace DatabaseCore;
 
 public interface IGetQuery<TResponse>
 {
-    Task<TResponse> Query();
+    Task<TResponse> Query(CancellationToken token = default);
 }
 
-public interface IGetQuery<TResponse, TParameters>
+public interface IGetQuery<TParameters, TResponse>
 {
-    Task<TResponse> Query(TParameters parameters);
+    Task<TResponse> Query(TParameters parameters, CancellationToken token = default);
 }

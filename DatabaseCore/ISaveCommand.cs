@@ -3,10 +3,10 @@ namespace DatabaseCore;
 
 public interface ISaveCommand<TParameters>
 {
-    Task Save(TParameters parameters);
+    Task Save(TParameters parameters, CancellationToken token = default);
 }
 
-public interface ISaveCommand<TResponse, TParameters>
+public interface ISaveCommand<TParameters, TResponse>
 {
-    Task<TResponse> Save(TParameters parameters);
+    Task<TResponse> Save(TParameters parameters, CancellationToken token = default);
 }
